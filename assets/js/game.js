@@ -19,6 +19,24 @@ function drawBall() {
     y += dy
 }
 
+function drawBouncyBall() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.beginPath()
+    ctx.arc(x, y, ballRadius, 0, Math.PI * 2)
+    ctx.fillStyle = '#0095dd'
+    ctx.fill()
+    ctx.closePath()
+
+    if (x >= canvas.width || x <= 0) {
+        dx = -dx
+    }
+
+    if (y >= canvas.height || y <= 0) {
+        dy = -dy
+    }
+    
+}
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     drawBall()
