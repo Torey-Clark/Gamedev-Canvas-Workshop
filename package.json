@@ -1,0 +1,20 @@
+{
+  "name": "html-game-tutorial-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx mix",
+    "prod": "npx mix --prod",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "npx mix watch"
+  },
+  "author": "Torey Clark",
+  "license": "MIT",
+  "devDependencies": {
+    "resolve-url-loader": "^5.0.0"
+  },
+  "dependencies": {
+    "laravel-mix": "^6.0.49"
+  }
+}
