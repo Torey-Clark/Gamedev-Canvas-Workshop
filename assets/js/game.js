@@ -8,33 +8,18 @@ let dy = -2
 let ballRadius = 10
 
 function drawBall() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.beginPath()
     ctx.arc(x, y, ballRadius, 0, Math.PI * 2)
     ctx.fillStyle = '#0095dd'
     ctx.fill()
     ctx.closePath()
 
-    x += dx
-    y += dy
-}
-
-function drawBouncyBall() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.beginPath()
-    ctx.arc(x, y, ballRadius, 0, Math.PI * 2)
-    ctx.fillStyle = '#0095dd'
-    ctx.fill()
-    ctx.closePath()
-
-    if (x >= canvas.width || x <= 0) {
-        dx = -dx
-    }
-
-    if (y >= canvas.height || y <= 0) {
+    if (y + dy < ballRadius || y + dy > canvas.height - ballRadius) {
         dy = -dy
     }
-    
+    if (x + dx < ballRadius || x + dx > canvas.width - ballRadius) {
+        dx = -dx
+    }
 }
 
 function draw() {
