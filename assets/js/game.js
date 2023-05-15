@@ -1,6 +1,8 @@
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 
+let score = 0
+
 let x = canvas.width / 2
 let y = canvas.height / 2
 let dx = 2
@@ -68,12 +70,19 @@ function drawBricks() {
     }
 }
 
+function drawScore() {
+    ctx.font = "16px Arial"
+    ctx.fillStyle = '#0095dd'
+    ctx.fillText(`Score: ${score}`, 8, 20)
+}
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     drawBricks()
     drawBall()
     drawPaddle()
+    drawScore()
     collisionDetection()
 
     if (rightPressed) {
@@ -94,7 +103,7 @@ function draw() {
             dy = -dy
         } else {
             // Game Over
-            alert('GAME OVER')
+            alert(`GAME OVER\nScore: ${score}`)
             document.location.reload()
             clearInterval(interval)
         }
@@ -122,6 +131,12 @@ function collisionDetection() {
             ) {
                 dy = -dy
                 brick.status = 0
+                score++
+                if (score === brickColumnCount * brickRowCount) {
+                    alert(`YOU WIN, CONGRATULATIONS\nScore:${score}`)
+                    document.location.reload()
+                    clearInterval(interval)
+                }
             }
         }
     }
