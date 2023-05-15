@@ -28,9 +28,38 @@ function drawPaddle() {
     ctx.closePath()
 }
 
+const brickRowCount = 3
+const brickColumnCount = 5
+const brickWidth = 75
+const brickHeight = 20
+const brickPadding = 10
+const brickOffsetTop = 30
+const brickOffsetLeft = 30
+function drawBricks() {
+    const bricks = []
+    for (let i = 0; i < brickColumnCount; i++) {
+        bricks[i] = []
+        for (let j = 0; j < brickRowCount; j++) {
+            const brickX = i * (brickWidth + brickPadding) + brickOffsetLeft
+            const brickY = j * (brickHeight + brickPadding) + brickOffsetTop
+            bricks[i][j] = {
+                x: brickX,
+                y: brickY,
+            }
+            ctx.beginPath()
+            ctx.rect(brickX, brickY, brickWidth, brickHeight)
+            ctx.fillStyle = '#0095dd'
+            ctx.fill()
+            ctx.closePath()
+        }
+    }
+    console.table(bricks)
+}
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+    drawBricks()
     drawBall()
     drawPaddle()
 
