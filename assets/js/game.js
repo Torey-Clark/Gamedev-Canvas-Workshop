@@ -2,9 +2,10 @@ const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 
 let score = 0
+let lives = 3
 
 let x = canvas.width / 2
-let y = canvas.height / 2
+let y = canvas.height - 30
 let dx = 2
 let dy = -2
 let ballRadius = 10
@@ -76,6 +77,12 @@ function drawScore() {
     ctx.fillText(`Score: ${score}`, 8, 20)
 }
 
+function drawLives() {
+    ctx.font = "16px Arial"
+    ctx.fillStyle = "#0095dd"
+    ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20)
+}
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -83,6 +90,7 @@ function draw() {
     drawBall()
     drawPaddle()
     drawScore()
+    drawLives()
     collisionDetection()
 
     if (rightPressed) {
@@ -102,10 +110,20 @@ function draw() {
             // Ball bounces off of the paddle
             dy = -dy
         } else {
-            // Game Over
-            alert(`GAME OVER\nScore: ${score}`)
-            document.location.reload()
-            clearInterval(interval)
+            // Lose a live
+            lives--
+            if (lives === 0) {
+                // Game Over
+                alert(`GAME OVER\nScore: ${score}`)
+                document.location.reload()
+            }
+
+            // Reset the ball and paddle positions
+            x = canvas.width / 2
+            y = canvas.height - 30
+            dx = 2
+            dy = -2
+            paddleX = (canvas.width - paddleWidth) / 2
         }
     }
     if (x + dx < ballRadius || x + dx > canvas.width - ballRadius) {
@@ -116,6 +134,8 @@ function draw() {
     // Increment the ball position
     x += dx
     y += dy
+
+    requestAnimationFrame(draw)
 }
 
 function collisionDetection() {
@@ -135,7 +155,6 @@ function collisionDetection() {
                 if (score === brickColumnCount * brickRowCount) {
                     alert(`YOU WIN, CONGRATULATIONS\nScore:${score}`)
                     document.location.reload()
-                    clearInterval(interval)
                 }
             }
         }
@@ -169,4 +188,4 @@ document.addEventListener('keydown', keyDownHandler, false)
 document.addEventListener('keyup', keyUpHandler, false)
 document.addEventListener('mousemove', mouseMoveHandler, false)
 prepareBricks()
-const interval = setInterval(draw, 10)
+draw()
