@@ -35,8 +35,8 @@ const brickHeight = 20
 const brickPadding = 10
 const brickOffsetTop = 30
 const brickOffsetLeft = 30
-function drawBricks() {
-    const bricks = []
+const bricks = []
+function prepareBricks() {
     for (let i = 0; i < brickColumnCount; i++) {
         bricks[i] = []
         for (let j = 0; j < brickRowCount; j++) {
@@ -45,15 +45,27 @@ function drawBricks() {
             bricks[i][j] = {
                 x: brickX,
                 y: brickY,
+                status: 1,
             }
-            ctx.beginPath()
-            ctx.rect(brickX, brickY, brickWidth, brickHeight)
-            ctx.fillStyle = '#0095dd'
-            ctx.fill()
-            ctx.closePath()
         }
     }
-    console.table(bricks)
+}
+
+
+function drawBricks() {
+    for (let i = 0; i < brickColumnCount; i++) {
+        for (let j = 0; j < brickRowCount; j++) {
+            const brick = bricks[i][j]
+            if (brick.status === 1) {
+                ctx.beginPath()
+                ctx.rect(brick.x, brick.y, brickWidth, brickHeight)
+                ctx.fillStyle = '#0095dd'
+                ctx.fill()
+                ctx.closePath()
+            }
+            
+        }
+    }
 }
 
 function draw() {
@@ -62,6 +74,7 @@ function draw() {
     drawBricks()
     drawBall()
     drawPaddle()
+    collisionDetection()
 
     if (rightPressed) {
         // Move the paddle right
@@ -96,6 +109,24 @@ function draw() {
     y += dy
 }
 
+function collisionDetection() {
+    for (let i = 0; i < brickColumnCount; i++) {
+        for (let j = 0; j < brickRowCount; j++) {
+            const brick = bricks[i][j]
+            if (
+                brick.status === 1 &&
+                x > brick.x &&
+                x < brick.x + brickWidth &&
+                y > brick.y &&
+                y < brick.y + brickHeight
+            ) {
+                dy = -dy
+                brick.status = 0
+            }
+        }
+    }
+}
+
 function keyDownHandler(event) {
     if (event.key === 'Right' || event.key === 'ArrowRight') {
         rightPressed = true
@@ -114,4 +145,5 @@ function keyUpHandler(event) {
 
 document.addEventListener('keydown', keyDownHandler, false)
 document.addEventListener('keyup', keyUpHandler, false)
+prepareBricks()
 const interval = setInterval(draw, 10)
