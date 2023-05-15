@@ -13,13 +13,6 @@ function drawBall() {
     ctx.fillStyle = '#0095dd'
     ctx.fill()
     ctx.closePath()
-
-    if (y + dy < ballRadius || y + dy > canvas.height - ballRadius) {
-        dy = -dy
-    }
-    if (x + dx < ballRadius || x + dx > canvas.width - ballRadius) {
-        dx = -dx
-    }
 }
 
 const paddleHeight = 10
@@ -28,11 +21,6 @@ let paddleX = (canvas.width - paddleWidth) / 2
 let rightPressed = false
 let leftPressed = false
 function drawPaddle() {
-    if (rightPressed) {
-        paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth)
-    } else if (leftPressed) {
-        paddleX = Math.max(paddleX - 7, 0)
-    }
     ctx.beginPath()
     ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight)
     ctx.fillStyle = '#0095dd'
@@ -42,8 +30,39 @@ function drawPaddle() {
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+
     drawBall()
     drawPaddle()
+
+    if (rightPressed) {
+        // Move the paddle right
+        paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth)
+    } else if (leftPressed) {
+        // Move the paddle left
+        paddleX = Math.max(paddleX - 7, 0)
+    }
+
+    if (y + dy < ballRadius) {
+        // Ball bounces off of the top wall
+        dy = -dy
+    } else if (y + dy > canvas.height - ballRadius) {
+        // Ball hits the bottom of the canvas
+        if (x > paddleX && x < paddleX + paddleWidth) {
+            // Ball bounces off of the paddle
+            dy = -dy
+        } else {
+            // Game Over
+            alert('GAME OVER')
+            document.location.reload()
+            clearInterval(interval)
+        }
+    }
+    if (x + dx < ballRadius || x + dx > canvas.width - ballRadius) {
+        // Ball bounces off of the left and right walls
+        dx = -dx
+    }
+
+    // Increment the ball position
     x += dx
     y += dy
 }
@@ -66,4 +85,4 @@ function keyUpHandler(event) {
 
 document.addEventListener('keydown', keyDownHandler, false)
 document.addEventListener('keyup', keyUpHandler, false)
-setInterval(draw, 10)
+const interval = setInterval(draw, 10)
